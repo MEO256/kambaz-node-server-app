@@ -1,4 +1,5 @@
 import model from "./model.js";
+import { v4 as uuidv4 } from "uuid";
 
 export function getAssignmentsForCourse(courseId, searchText) {
   if (searchText) {
@@ -16,8 +17,10 @@ export function getAssignmentById(assignmentId) {
 }
 
 export function createAssignment(assignment) {
-  return model.create(assignment);
+    const newAssign = { ...assignment, _id: uuidv4() };
+    return model.create(newAssign);
 }
+
 
 export function deleteAssignment(assignmentId) {
   return model.deleteOne({ _id: assignmentId });
