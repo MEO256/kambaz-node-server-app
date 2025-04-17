@@ -1,16 +1,36 @@
 import model from "./model.js";
 
-export const updateAssign = (assignId, assignment) => model.updateOne({_id: assignId}, {$set: assignment});
-
-export const deleteAssignment = (assignId) => model.deleteOne({ _id: assignId });
-
-export const createAssignment = (cid, assignment) => {
-    const newAssignment = {
-        ...assignment,
-        course: cid,
-        _id: new Date().getTime().toString(),
-    };
-    return model.create(newAssignment);
+export function getAssignmentsForCourse(courseId, searchText) {
+  if (searchText) {
+    return model.find({
+      course: courseId,
+      title: { $regex: searchText, $options: "i" },
+      description: { $regex: searchText, $options: "i" },
+    });
+  }
+  return model.find({ course: courseId });
 }
 
-export const findAssignByCid = (cid) => model.find({course: cid});
+export function getAssignmentById(assignmentId) {
+  return model.findById(assignmentId);
+}
+
+export function createAssignment(assignment) {
+  return model.create(assignment);
+}
+
+export function deleteAssignment(assignmentId) {
+  return model.deleteOne({ _id: assignmentId });
+}
+
+export function updateAssignment(assignmentId, assignmentUpdates) {
+  return model.updateOne({ _id: assignmentId }, { $set: assignmentUpdates });
+}
+
+export function getAllAssignments() {
+  return model.find();
+}
+
+export function deleteAssignmentsForCourse(courseId) {
+  return model.deleteMany({ course: courseId });
+}
